@@ -6,14 +6,23 @@ app.use(express.json());
 
 
 app.post('/feeds', (req, res) => {
-  console.log("El body que recibimos fue:" + JSON.stringify(req.body));
-  // Dormir el hilo por 3 segundos (3000 milisegundos)
-  setTimeout(function() {
-  console.log("Después de dormir por 3 segundos");
-  }, 3000);
-  console.log("Estoy respondiendo");
-  res.status(200).json({ success: true });
-  //res.status(500).json({ fail: true });
+  console.log("El body que recibimos fue: " + JSON.stringify(req.body));
+  
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Después de dormir por 3 segundos");
+      resolve();
+    }, 3000);
+  })
+  .then(() => {
+    console.log("Estoy respondiendo");
+    res.status(200).json({ success: true });
+    //res.status(500).json({ fail: true });
+  })
+  .catch((error) => {
+    console.log("Error:", error);
+    res.status(500).json({ fail: true });
+  });
 });
 
 app.get('/ping', (req, res) => {
